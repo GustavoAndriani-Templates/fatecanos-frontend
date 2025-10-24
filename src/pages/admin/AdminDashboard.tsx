@@ -2,22 +2,14 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../context/AuthContext';
 import { adminAPI, AdminSubtopic } from '../../services/api';
-import { Users, MessageSquare, Folder, BarChart3, Trash2, Edit, Plus } from 'lucide-react';
+import { useTranslation } from '../../context/TranslationContext';
+import { Users, MessageSquare, Folder, BarChart3, Trash2, Edit } from 'lucide-react';
 import EditSubtopicModal from './EditSubtopicModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
-interface AdminStats {
-  counts: {
-    users: number;
-    subtopics: number;
-    posts: number;
-    comments: number;
-  };
-  recentUsers: any[];
-}
-
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [editingSubtopic, setEditingSubtopic] = useState<AdminSubtopic | null>(null);
   const [deletingSubtopic, setDeletingSubtopic] = useState<AdminSubtopic | null>(null);
@@ -79,10 +71,10 @@ const AdminDashboard: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 rounded-lg p-6">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
-            Acesso Negado
+            {t('auth.accessDenied')}
           </h2>
           <p className="text-red-700 dark:text-red-300">
-            Você não tem permissão para acessar esta página. Apenas administradores podem acessar o painel admin.
+            {t('auth.accessDeniedMessage')}
           </p>
         </div>
       </div>
@@ -100,7 +92,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-        Painel Admin
+        {t('admin.title')}
       </h1>
 
       {/* Statistics Cards */}
@@ -111,7 +103,7 @@ const AdminDashboard: React.FC = () => {
               <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Usuários</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('admin.users')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.counts.users || 0}
               </p>
@@ -125,7 +117,7 @@ const AdminDashboard: React.FC = () => {
               <Folder className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Comunidades</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('admin.communities')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.counts.subtopics || 0}
               </p>
@@ -139,7 +131,7 @@ const AdminDashboard: React.FC = () => {
               <MessageSquare className="h-6 w-6 text-orange-600 dark:text-orange-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Posts</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('admin.posts')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.counts.posts || 0}
               </p>
@@ -153,7 +145,7 @@ const AdminDashboard: React.FC = () => {
               <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Comentários</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('admin.comments')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.counts.comments || 0}
               </p>
@@ -166,7 +158,7 @@ const AdminDashboard: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Gerenciar Comunidades ({subtopics?.length || 0})
+            {t('admin.manageCommunities')} ({subtopics?.length || 0})
           </h2>
         </div>
         
@@ -182,23 +174,23 @@ const AdminDashboard: React.FC = () => {
                     {subtopic.description}
                   </p>
                   <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span>by {subtopic.owner.username} ({subtopic.owner.email})</span>
-                    <span>{subtopic._count.posts} posts</span>
-                    <span>Criado em: {new Date(subtopic.createdAt).toLocaleDateString()}</span>
-                    <span>Atualizado em: {new Date(subtopic.updatedAt).toLocaleDateString()}</span>
+                    <span className={'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}>{t('community.by')} {subtopic.owner.username}</span>
+                    <span className={'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}>{subtopic._count.posts} { subtopic._count.posts == 1 ? t('community.post') : t('community.posts')}</span>
+                    <span className={'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}>{t('admin.createdAt')}: {new Date(subtopic.createdAt).toLocaleDateString()}</span>
+                    <span className={'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}>{t('admin.updatedAt')}: {new Date(subtopic.updatedAt).toLocaleDateString()}</span>
                   </div>
 
                   {/* Recent Posts Preview */}
                   {subtopic.posts.length > 0 && (
                     <div className="mt-3">
                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Posts Recentes:
+                        {t('profile.recentPosts')}:
                       </p>
                       <div className="space-y-1">
                         {subtopic.posts.slice(0, 3).map((post: any) => (
                           <div key={post.id} className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                             <span className="truncate">"{post.title}"</span>
-                            <span>by {post.author.username}</span>
+                            <span>{t('community.by')} {post.author.username}</span>
                           </div>
                         ))}
                         {subtopic.posts.length > 3 && (

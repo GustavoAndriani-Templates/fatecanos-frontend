@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../../context/TranslationContext';
 import { X } from 'lucide-react';
 
 interface Subtopic {
@@ -24,6 +25,7 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
   const [name, setName] = useState(subtopic.name);
   const [description, setDescription] = useState(subtopic.description);
   const [errors, setErrors] = useState<{ name?: string; description?: string }>({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     setName(subtopic.name);
@@ -34,11 +36,11 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
     const newErrors: { name?: string; description?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('auth.nameIsRequired');
     } else if (name.length < 3) {
-      newErrors.name = 'Name must be at least 3 characters long';
+      newErrors.name = t('auth.nameNeedMore');
     } else if (name.length > 20) {
-      newErrors.name = 'Name must be less than 20 characters long';
+      newErrors.name = t('auth.nameNeedLess');
     }
 
     if (!description.trim()) {
@@ -78,7 +80,7 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Edit Community
+            {t('editCommunity.title')}
           </h2>
           <button
             onClick={onClose}
@@ -91,7 +93,7 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Community Name *
+              {t('community.communityName')} *
             </label>
             <input
               id="name"
@@ -103,19 +105,19 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
                   ? 'border-red-300 dark:border-red-600' 
                   : 'border-gray-300 dark:border-gray-600'
               }`}
-              placeholder="Enter community name..."
+              placeholder={t('community.namePlaceholder')}
             />
             {errors.name && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
             )}
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {name.length}/20 characters
+              {name.length}/20 {t('common.characters')}
             </p>
           </div>
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description *
+              {t('community.description')} *
             </label>
             <textarea
               id="description"
@@ -127,13 +129,13 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
                   ? 'border-red-300 dark:border-red-600' 
                   : 'border-gray-300 dark:border-gray-600'
               }`}
-              placeholder="Enter community description..."
+              placeholder={t('community.descriptionPlaceholder')}
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description}</p>
             )}
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {description.length}/500 characters
+              {description.length}/500 {t('common.characters')}
             </p>
           </div>
 
@@ -143,14 +145,14 @@ const EditSubtopicModal: React.FC<EditSubtopicModalProps> = ({
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
-              Cancel
+              {t('editCommunity.cancelButton')}
             </button>
             <button
               type="submit"
               disabled={isLoading}
               className="px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 transition-colors"
             >
-              {isLoading ? 'Saving...' : 'Save Changes'}
+              {isLoading ? t('editCommunity.saving') : t('editCommunity.saveButton')}
             </button>
           </div>
         </form>

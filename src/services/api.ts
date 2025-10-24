@@ -41,7 +41,7 @@ export const authAPI = {
 export const subtopicsAPI = {
   getAll: () => api.get<Subtopic[]>('/subtopics'),
   getBySlug: (slug: string) => api.get<Subtopic>(`/subtopics/${slug}`),
-  create: (data: { name: string; description: string }) =>
+  create: (data: { name: string; description: string; theme: string }) => // ✅ Adicionado theme
     api.post<Subtopic>('/subtopics', data),
 };
 

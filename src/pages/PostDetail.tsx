@@ -1,12 +1,14 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from '../context/TranslationContext';
 import { postsAPI } from '../services/api';
 import CommentSection from '../components/CommentSection';
 import { ArrowLeft, MessageSquare, Calendar } from 'lucide-react';
 
 const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
 
   const { data: post, isLoading } = useQuery({
     queryKey: ['post', id],
@@ -27,14 +29,14 @@ const PostDetail: React.FC = () => {
       <div className="text-center py-12">
         <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
         <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-          Post não encontrado
+          {t('post.notFound')}
         </h3>
         <Link
           to="/"
           className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Voltar para o início
+          {t('common.backToHome')}
         </Link>
       </div>
     );
@@ -47,7 +49,7 @@ const PostDetail: React.FC = () => {
         className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-6"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
-        Voltar para s/{post.subtopic.name}
+        {t('common.backTo')} s/{post.subtopic.name}
       </Link>
 
       {/* Post Content */}
@@ -64,14 +66,14 @@ const PostDetail: React.FC = () => {
           </h1>
           
           <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
-            <span>by {post.author.username}</span>
+            <span>{t('post.by')} {post.author.username}</span>
             <div className="flex items-center space-x-1">
               <Calendar className="h-4 w-4" />
               <span>{new Date(post.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="flex items-center space-x-1">
               <MessageSquare className="h-4 w-4" />
-              <span>{post._count.comments} comentários</span>
+              <span>{post._count.comments} {t('community.comments')}</span>
             </div>
           </div>
         </div>

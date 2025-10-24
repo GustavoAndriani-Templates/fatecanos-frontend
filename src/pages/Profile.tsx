@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/TranslationContext';
 import { useQuery } from '@tanstack/react-query';
 import { usersAPI } from '../services/api';
 import { User, MessageSquare, Users, Folder, Calendar } from 'lucide-react';
 
 const Profile: React.FC = () => {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'overview' | 'posts' | 'communities'>('overview');
 
   const { data: userProfile, isLoading } = useQuery({
@@ -31,10 +33,10 @@ const Profile: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-yellow-50 dark:bg-yellow-900/50 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
           <h2 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-            Not Authenticated
+            {t('auth.needAuth')}
           </h2>
           <p className="text-yellow-700 dark:text-yellow-300">
-            Please log in to view your profile.
+            {t('auth.pleaseLogin')}
           </p>
         </div>
       </div>
@@ -66,7 +68,7 @@ const Profile: React.FC = () => {
               </h1>
               <p className="text-orange-100">{userProfile?.email}</p>
               <p className="text-orange-200 text-sm mt-1">
-                Membro desde {new Date(userProfile?.createdAt || '').toLocaleDateString()}
+                {t('profile.memberSince')} {new Date(userProfile?.createdAt || '').toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -79,21 +81,21 @@ const Profile: React.FC = () => {
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.subtopics}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Comunidades Criadas</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('profile.communitiesCreated')}</div>
           </div>
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
             <MessageSquare className="h-8 w-8 text-orange-500 mx-auto mb-2" />
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.posts}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Posts Criados</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('profile.postsCreated')}</div>
           </div>
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
             <Users className="h-8 w-8 text-orange-500 mx-auto mb-2" />
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.comments}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Comentários</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('profile.comments')}</div>
           </div>
         </div>
       </div>
@@ -110,7 +112,7 @@ const Profile: React.FC = () => {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
-              Visão Geral
+              {t('profile.overview')}
             </button>
             <button
               onClick={() => setActiveTab('posts')}
@@ -120,7 +122,7 @@ const Profile: React.FC = () => {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
-              Posts ({stats.posts})
+              {t('profile.posts')} ({stats.posts})
             </button>
             <button
               onClick={() => setActiveTab('communities')}
@@ -130,7 +132,7 @@ const Profile: React.FC = () => {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
-              Comunidades ({stats.subtopics})
+              {t('profile.communities')} ({stats.subtopics})
             </button>
           </nav>
         </div>
@@ -141,12 +143,12 @@ const Profile: React.FC = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Sumário de Atividades
+                  {t('profile.activitySummary')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                      Comunidades Recentes
+                      {t('profile.recentCommunities')}
                     </h4>
                     {userSubtopics && userSubtopics.length > 0 ? (
                       <div className="space-y-2">
@@ -156,21 +158,21 @@ const Profile: React.FC = () => {
                               s/{subtopic.name}
                             </span>
                             <span className="text-xs text-gray-500">
-                              {subtopic._count.posts} posts
+                              {subtopic._count.posts} {t('community.posts')}
                             </span>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Não criou nenhuma comunidade ainda
+                        {t('profile.noCommunitiesCreated')}
                       </p>
                     )}
                   </div>
                   
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                      Posts Recentes
+                      {t('profile.recentPosts')}
                     </h4>
                     {userPosts && userPosts.length > 0 ? (
                       <div className="space-y-2">
@@ -182,7 +184,7 @@ const Profile: React.FC = () => {
                       </div>
                     ) : (
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Não criou nenhum post ainda
+                        {t('profile.noPostsCreated')}
                       </p>
                     )}
                   </div>
@@ -194,7 +196,7 @@ const Profile: React.FC = () => {
           {activeTab === 'posts' && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Seus Posts ({stats.posts})
+                {t('profile.yourPosts')} ({stats.posts})
               </h3>
               {postsLoading ? (
                 <div className="flex justify-center items-center h-32">
@@ -211,14 +213,14 @@ const Profile: React.FC = () => {
                         {post.title}
                       </h4>
                       <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                        <span>em s/{post.subtopic.name}</span>
+                        <span>{t('profile.in')} s/{post.subtopic.name}</span>
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4" />
                           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <MessageSquare className="h-4 w-4" />
-                          <span>{post._count.comments} comentários</span>
+                          <span>{post._count.comments} {t('community.comments')}</span>
                         </div>
                       </div>
                     </div>
@@ -227,7 +229,7 @@ const Profile: React.FC = () => {
               ) : (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Você não criou nenhum post ainda.</p>
+                  <p>{t('profile.noPosts')}</p>
                 </div>
               )}
             </div>
@@ -236,7 +238,7 @@ const Profile: React.FC = () => {
           {activeTab === 'communities' && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Suas comunidades ({stats.subtopics})
+                {t('profile.yourCommunities')} ({stats.subtopics})
               </h3>
               {subtopicsLoading ? (
                 <div className="flex justify-center items-center h-32">
@@ -256,7 +258,7 @@ const Profile: React.FC = () => {
                         {subtopic.description}
                       </p>
                       <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <span>{subtopic._count.posts} posts</span>
+                        <span>{subtopic._count.posts} {t('community.posts')}</span>
                         <span>{new Date(subtopic.createdAt).toLocaleDateString()}</span>
                       </div>
                     </div>
@@ -265,7 +267,7 @@ const Profile: React.FC = () => {
               ) : (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Você não criou nenhuma comunidade ainda.</p>
+                  <p>{t('profile.noCommunities')}</p>
                 </div>
               )}
             </div>

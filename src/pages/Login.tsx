@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/TranslationContext';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const { login } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,7 +22,7 @@ const Login: React.FC = () => {
       await login(email, password);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.response?.data?.error || t('common.error'));
     } finally {
       setIsLoading(false);
     }
@@ -30,7 +32,7 @@ const Login: React.FC = () => {
     <div className="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
       <div className="p-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          Entre na sua conta
+          {t('auth.login')}
         </h2>
 
         {error && (
@@ -42,7 +44,7 @@ const Login: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Email
+              {t('auth.email')}
             </label>
             <input
               id="email"
@@ -56,7 +58,7 @@ const Login: React.FC = () => {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Senha
+              {t('auth.password')}
             </label>
             <input
               id="password"
@@ -73,14 +75,14 @@ const Login: React.FC = () => {
             disabled={isLoading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50"
           >
-            {isLoading ? 'Loading...' : 'Login'}
+            {isLoading ? t('common.loading') : t('auth.login')}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-          Não tem uma conta?{' '}
+          {t('auth.noAccount')}{' '}
           <Link to="/register" className="font-medium text-orange-500 hover:text-orange-600">
-            Registre-se
+            {t('auth.register')}
           </Link>
         </p>
       </div>

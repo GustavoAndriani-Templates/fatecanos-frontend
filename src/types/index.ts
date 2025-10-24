@@ -26,6 +26,7 @@ export interface Subtopic {
   name: string;
   description: string;
   slug: string;
+  theme: string;
   createdAt: string;
   updatedAt: string;
   owner: {

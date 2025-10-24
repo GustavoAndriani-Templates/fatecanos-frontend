@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import { commentsAPI } from '../services/api';
+import { useTranslation } from '../context/TranslationContext';
 import { MessageSquare, Reply, Trash2 } from 'lucide-react';
 
 interface Comment {
@@ -24,6 +25,7 @@ interface CommentSectionProps {
 
 const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   const [newComment, setNewComment] = useState('');
+  const { t } = useTranslation();
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -155,7 +157,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
     <div className="mt-8">
       <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
         <MessageSquare className="h-5 w-5 mr-2" />
-        Comentários {comments && `(${comments.length})`}
+        {t('community.comments').toLocaleUpperCase()} {comments && `(${comments.length})`}
       </h3>
 
       {/* Add Comment Form */}
@@ -164,7 +166,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Adicione um comentário..."
+            placeholder={t('community.writeComment')}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:text-white resize-none"
             rows={4}
           />
@@ -174,14 +176,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
               disabled={!newComment.trim() || createCommentMutation.isPending}
               className="px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-md disabled:opacity-50 transition-colors"
             >
-              {createCommentMutation.isPending ? 'Enviando...' : 'Comentar'}
+              {createCommentMutation.isPending ? t('community.loadingPostComment') : t('community.postComment')}
             </button>
           </div>
         </form>
       ) : (
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6 text-center">
           <p className="text-gray-600 dark:text-gray-400">
-            Faça login para adicionar um comentário.
+            {t('comments.doLogin')}
           </p>
         </div>
       )}
@@ -200,7 +202,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
       ) : (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>Não há comentários ainda. Seja o primeiro a comentar!</p>
+          <p>{t('community.noCommentsFound')}</p>
+          <p>{t('community.beFirstComment')}</p>
         </div>
       )}
     </div>

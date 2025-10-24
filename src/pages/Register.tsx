@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/TranslationContext';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const { register } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,12 +29,12 @@ const Register = () => {
     setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth.passwordsNotMatch'));
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError(t('auth.passwordLength'));
       return;
     }
 
@@ -42,7 +44,7 @@ const Register = () => {
       await register(formData.email, formData.username, formData.password);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Registration failed');
+      setError(err.response?.data?.error || t('common.error'));
     } finally {
       setIsLoading(false);
     }
@@ -52,7 +54,7 @@ const Register = () => {
     <div className="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
       <div className="p-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          Crie a sua conta
+          {t('auth.register')}
         </h2>
 
         {error && (
@@ -64,7 +66,7 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Email
+              {t('auth.email')}
             </label>
             <input
               id="email"
@@ -79,7 +81,7 @@ const Register = () => {
 
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Nome de usuário
+              {t('auth.username')}
             </label>
             <input
               id="username"
@@ -96,7 +98,7 @@ const Register = () => {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Senha
+              {t('auth.password')}
             </label>
             <input
               id="password"
@@ -112,7 +114,7 @@ const Register = () => {
 
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Confirme a Senha
+              {t('auth.confirmPassword')}
             </label>
             <input
               id="confirmPassword"
@@ -131,14 +133,14 @@ const Register = () => {
             disabled={isLoading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50"
           >
-            {isLoading ? 'Creating account...' : 'Create account'}
+            {isLoading ? t('auth.creatingAccount') : t('auth.createAccount')}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-          Já tem uma conta?{' '}
+          {t('auth.haveAccount')}{' '}
           <Link to="/login" className="font-medium text-orange-500 hover:text-orange-600">
-            Logar
+            {t('auth.login')}
           </Link>
         </p>
       </div>
